@@ -28,34 +28,19 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import io.barabuka.AudioSessionTransportWS
 import io.barabuka.audio.AudioSession
+import io.barabuka.audio.AudioSessionTransport
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 
-const val HOST = "192.168.1.13"
-//const val HOST = "192.168.0.105"
-const val PORT = 8080
-const val PATH = "/channel"
-
 @Composable
-fun BarabukaAppContent() {
+fun BarabukaAppContent(audioSession: AudioSession) {
     // val networker = remember { Networker() }
-
-    val ioScope = remember { CoroutineScope(Dispatchers.IO) }
-    val transport = remember {
-        AudioSessionTransportWS(
-            scope = ioScope,
-            host = HOST,
-            port = PORT,
-            path = PATH
-        )
-    }
-    val audioSession = remember { AudioSession(transport) }
 
     MaterialTheme {
         var inputMessage by remember { mutableStateOf("") }
         var chatMessages by remember { mutableStateOf("") }
-        val isConnected by transport.isConnected.collectAsState()
+        val isConnected by audioSession.isConnected.collectAsState()
         val coroutineScope = rememberCoroutineScope()
 
         /*

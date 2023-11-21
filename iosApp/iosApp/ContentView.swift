@@ -4,6 +4,7 @@ import ComposeApp
 import SharedLib
 import Combine
 import KMPNativeCoroutinesCore
+import KMPNativeCoroutinesAsync
 import KMPNativeCoroutinesCombine
 
 /*extension SharedAudioSessionTransport {
@@ -12,25 +13,45 @@ import KMPNativeCoroutinesCombine
     }
 }*/
 
-extension SharedAudioSessionTransport {
-    //func fff() -> NativeFlow<String, Error, KotlinUnit> {
-    //    SharedAudioSessionTransportNative.fff(<#T##self: SharedAudioSessionTransport##SharedAudioSessionTransport#>)
-    //}
-    //func getRandomLetters() -> NativeSuspend<String, Error, KotlinUnit> {
-    //    RandomLettersGeneratorNativeKt.getRandomLetters(self)
-    //}
-}
+/*extension AudioSessionTransport {
+    func testFlow() -> NativeFlow<String, Error, Void> {
+        AudioSessionTransportNativeKt.testFlow(self)
+    }
+}*/
 
 struct ComposeView: UIViewControllerRepresentable {
     
+   // let audioTransport: AudioSessionTransport
     
-    let audioTransport: SharedAudioSessionTransport
+  //  let publisher: AnyPublisher<String, Error>
     
     init() {
-        audioTransport = MainViewControllerKt.createAudioTransport()
-        print("\(audioTransport)")
+     //   audioTransport = AudioSessionTransportWSKt.createAudioSessionTransport()
+     //   print("\(audioTransport)")
+        
+      //  audioTransport.doInit()
+        
+      //  publisher = createPublisher(for: AudioSessionTransportNativeKt.testFlow(audioTransport))
+      //  let future = createFuture(for: AudioSessionTransportNativeKt.testFlow(audioTransport))
+
+        // Now use this future as you would any other
+        /*  let cancellable = future.sink { completion in
+            print("Received completion: \(completion)")
+        } receiveValue: { value in
+            print("Received value: \(value)")
+        } */
+        
+        // Now use this publisher as you would any other
+       /* let cancellable = publisher.sink { completion in
+            print("Received completion: \(completion)")
+        } receiveValue: { value in
+            print("Received value: \(value)")
+        } */
+
+        // To cancel the flow (collection) just cancel the publisher
+        //cancellable.cancel()
     
-        RandomLettersGenerator.getRandomLettersFlow(RandomLettersGenerator)
+    
         //Shared().getRandomLettersFlow()
         
        // SharedAudioSessionTransportWS.

@@ -29,7 +29,7 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "SharedLib"
             binaryOption("bundleId", "io.barabuka.shared")
-            isStatic = true
+            isStatic = false
         }
     }
     

@@ -8,6 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import io.barabuka.audio.AudioSession
 
 class MainActivity : ComponentActivity() {
 
@@ -37,7 +38,7 @@ class MainActivity : ComponentActivity() {
 
     private fun launchApp() {
         setContent {
-            BarabukaAppContent()
+            BarabukaAppContent(AudioSession())
         }
     }
 }

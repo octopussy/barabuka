@@ -10,20 +10,36 @@ import io.ktor.websocket.Frame
 import io.ktor.websocket.send
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+
+const val HOST = "192.168.8.129"
+//const val HOST = "192.168.0.105"
+const val PORT = 8080
+const val PATH = "/channel"
+
+fun createAudioSessionTransport() = AudioSessionTransportWS(
+    scope = CoroutineScope(Dispatchers.IO),
+    host = HOST,
+    port = PORT,
+    path = PATH
+)
 
 class AudioSessionTransportWS(
     private val scope: CoroutineScope,
@@ -55,9 +71,15 @@ class AudioSessionTransportWS(
         return receiveChannel.receiveAsFlow()
     }
 
-    override val fff: StateFlow<String> = MutableStateFlow("123")
-
-    override val fff2: StateFlow<String> = MutableStateFlow("123")
+    override val testFlow: Flow<String>
+        get() = flow {
+            var item = 0
+            while (true) {
+                emit("Emit item $item")
+                ++item
+                delay(1000)
+            }
+        }
 
     override fun init() {
         openSocket()
@@ -121,7 +143,7 @@ class AudioSessionTransportWS(
         launch {
             for (data in sendChannel) {
                 session.send(data)
-                logger.d { "[SESSION] --> ${data.size} bytes." }
+                logger.d { "--> ${data.size} bytes." }
             }
         }
     }
@@ -132,7 +154,7 @@ class AudioSessionTransportWS(
             val data = frame?.data
             if (data != null) {
                 val pts = getTimeMillis() * 1000 + Clock.System.now().nanosecondsOfSecond
-                logger.d { "[SESSION] <-- ${data.size} bytes " }
+                logger.d { "<-- ${data.size} bytes " }
                 receiveChannel.trySend(data to pts)
             }
         }

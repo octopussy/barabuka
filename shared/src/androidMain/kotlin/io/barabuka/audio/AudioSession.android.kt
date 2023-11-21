@@ -10,6 +10,7 @@ import android.media.MediaCodec.BufferInfo
 import android.os.Handler
 import android.os.Looper
 import co.touchlab.kermit.Logger
+import io.barabuka.createAudioSessionTransport
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -76,9 +77,7 @@ object AACProfiles {
 
 private const val MAX_ATTEMPTS_TO_CONNECT = 3
 
-actual class AudioSession actual constructor(
-    private val delegate: AudioSessionTransport
-) {
+actual class AudioSession {
     private val scope = CoroutineScope(Dispatchers.Default)
 
     private var audioRecord: AudioRecord? = null
@@ -94,6 +93,10 @@ actual class AudioSession actual constructor(
     private var isRecording = false
 
     private val recordBuffer = ByteArray(RECORD_BUFFER_SIZE)
+
+    private val delegate = createAudioSessionTransport()
+
+    actual val isConnected: StateFlow<Boolean> = delegate.isConnected
 
     private val rawRecordedChunks =
         Channel<ByteArray>(UNLIMITED, onBufferOverflow = BufferOverflow.DROP_OLDEST)
