@@ -1,8 +1,25 @@
 import UIKit
 import SwiftUI
 import ComposeApp
+import SharedLib
 import Combine
+import KMPNativeCoroutinesCore
 import KMPNativeCoroutinesCombine
+
+/*extension SharedAudioSessionTransport {
+    func getRandomLetters() -> NativeSuspend<String, Error, KotlinUnit> {
+        AudioSessionTransportWS.getRandomLetters(self)
+    }
+}*/
+
+extension SharedAudioSessionTransport {
+    //func fff() -> NativeFlow<String, Error, KotlinUnit> {
+    //    SharedAudioSessionTransportNative.fff(<#T##self: SharedAudioSessionTransport##SharedAudioSessionTransport#>)
+    //}
+    //func getRandomLetters() -> NativeSuspend<String, Error, KotlinUnit> {
+    //    RandomLettersGeneratorNativeKt.getRandomLetters(self)
+    //}
+}
 
 struct ComposeView: UIViewControllerRepresentable {
     
@@ -12,9 +29,17 @@ struct ComposeView: UIViewControllerRepresentable {
     init() {
         audioTransport = MainViewControllerKt.createAudioTransport()
         print("\(audioTransport)")
+    
+        RandomLettersGenerator.getRandomLettersFlow(RandomLettersGenerator)
+        //Shared().getRandomLettersFlow()
         
+       // SharedAudioSessionTransportWS.
+        
+        //let ss = Barabuka
         // Create an AnyPublisher for your flow
-        //let publisher = createPublisher(for: audioTransport.receiveChannel)
+       // let publisher = createPublisher(for: audioTransport.fff)
+        
+        //SharedAudioSessionTransportWS.onSpeechFinished(SharedAudioSessionTransportWS)
 
         // Now use this publisher as you would any other
        /* let cancellable = publisher.sink { completion in

@@ -1,6 +1,5 @@
 package io.barabuka
 
-import com.rickclephas.kmp.nativecoroutines.NativeCoroutines
 import io.barabuka.audio.AudioSessionTransport
 import io.barabuka.util.LoggerObj
 import io.ktor.client.plugins.websocket.DefaultClientWebSocketSession
@@ -18,7 +17,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -55,6 +54,10 @@ class AudioSessionTransportWS(
     override fun receiveChannelFlow(): Flow<Pair<ByteArray, Long>> {
         return receiveChannel.receiveAsFlow()
     }
+
+    override val fff: StateFlow<String> = MutableStateFlow("123")
+
+    override val fff2: StateFlow<String> = MutableStateFlow("123")
 
     override fun init() {
         openSocket()

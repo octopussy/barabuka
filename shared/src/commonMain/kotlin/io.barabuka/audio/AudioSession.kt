@@ -21,6 +21,11 @@ interface AudioSessionTransport {
 
     @NativeCoroutines
     fun receiveChannelFlow(): Flow<Pair<ByteArray, Long>>
+
+    @NativeCoroutines
+    val fff: StateFlow<String>
+
+    val fff2: StateFlow<String>
 }
 
 expect class AudioSession(delegate: AudioSessionTransport) {

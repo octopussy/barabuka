@@ -20,6 +20,18 @@ kotlin {
     }
     
     jvm()
+
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            baseName = "SharedLib"
+            binaryOption("bundleId", "io.barabuka.shared")
+            isStatic = true
+        }
+    }
     
     sourceSets {
         commonMain.dependencies {

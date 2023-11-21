@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.nativeCoroutines)
 }
 
 kotlin {
@@ -49,6 +51,10 @@ kotlin {
             implementation(compose.components.resources)
         }
     }
+}
+
+kotlin.sourceSets.all {
+    languageSettings.optIn("kotlin.experimental.ExperimentalObjCName")
 }
 
 android {
