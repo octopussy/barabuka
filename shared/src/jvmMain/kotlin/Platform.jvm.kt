@@ -3,3 +3,7 @@ class JVMPlatform: Platform {
 }
 
 actual fun getPlatform(): Platform = JVMPlatform()
+
+actual typealias PlatformBytes = ByteArray
+actual fun PlatformBytes.toByteArray(): ByteArray = this
+actual fun ByteArray.toPlatformBytes() : PlatformBytes = this

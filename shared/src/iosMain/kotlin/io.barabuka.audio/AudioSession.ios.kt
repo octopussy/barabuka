@@ -8,12 +8,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import toPlatformBytes
 
 
 actual class AudioSession {
     private val scope = CoroutineScope(Dispatchers.Default)
 
     private val transport = createAudioSessionTransport()
+
+    private var audioDataReceiver: AudioDataReceiver? =null
 
     @NativeCoroutines
     actual val isConnected: StateFlow<Boolean>
@@ -29,6 +32,7 @@ actual class AudioSession {
         scope.launch {
             for (data in transport.receiveChannel) {
                 logger.d { "RECEIVED ${data.first.size}" }
+                audioDataReceiver?.onReceivePacket(data.first.toPlatformBytes())
             }
         }
     }
@@ -43,5 +47,9 @@ actual class AudioSession {
 
     actual fun stopSpeech() {
         logger.d { "STOP SPEECH" }
+    }
+
+    actual fun setAudioDataReceiver(receiver: AudioDataReceiver) {
+        audioDataReceiver = receiver
     }
 }

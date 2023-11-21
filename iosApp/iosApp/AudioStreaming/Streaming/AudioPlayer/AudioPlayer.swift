@@ -5,6 +5,7 @@
 
 import AVFoundation
 import CoreAudio
+import ComposeApp
 
 open class AudioPlayer {
     public weak var delegate: AudioPlayerDelegate?
@@ -128,6 +129,7 @@ open class AudioPlayer {
     private let serializationQueue: DispatchQueue
     private let sourceQueue: DispatchQueue
 
+    private let aaa: AudioEntryProvider
     private let entryProvider: AudioEntryProviding
 
     var entriesQueue: PlayerQueueEntries
@@ -143,9 +145,11 @@ open class AudioPlayer {
         serializationQueue = DispatchQueue(label: "streaming.core.queue", qos: .userInitiated)
         sourceQueue = DispatchQueue(label: "source.queue", qos: .default)
 
-        entryProvider = AudioEntryProvider(networkingClient: NetworkingClient(),
+        aaa = AudioEntryProvider(networkingClient: NetworkingClient(),
                                            underlyingQueue: sourceQueue,
                                            outputAudioFormat: outputAudioFormat)
+        
+        entryProvider = aaa
 
         fileStreamProcessor = AudioFileStreamProcessor(playerContext: playerContext,
                                                        rendererContext: rendererContext,
@@ -168,6 +172,10 @@ open class AudioPlayer {
         playerContext.audioPlayingEntry?.close()
         clearQueue()
         rendererContext.clean()
+    }
+    
+    public func getAudioDataReceiver() -> SharedAudioDataReceiver {
+        return aaa.getAudioReceiver()
     }
 
     // MARK: Public

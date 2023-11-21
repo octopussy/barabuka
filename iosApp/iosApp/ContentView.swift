@@ -3,9 +3,6 @@ import SwiftUI
 import ComposeApp
 import SharedLib
 import Combine
-import KMPNativeCoroutinesCore
-import KMPNativeCoroutinesAsync
-import KMPNativeCoroutinesCombine
 
 /*extension SharedAudioSessionTransport {
     func getRandomLetters() -> NativeSuspend<String, Error, KotlinUnit> {
@@ -24,6 +21,8 @@ struct ComposeView: UIViewControllerRepresentable {
    // let audioTransport: AudioSessionTransport
     
   //  let publisher: AnyPublisher<String, Error>
+    
+    let player = AudioPlayer()
     
     init() {
      //   audioTransport = AudioSessionTransportWSKt.createAudioSessionTransport()
@@ -73,10 +72,12 @@ struct ComposeView: UIViewControllerRepresentable {
         cancellable.cancel()
         
         */
+        
+        player.play(url: URL(string: "http://google.com")!)
     }
     
     func makeUIViewController(context: Context) -> UIViewController {
-        MainViewControllerKt.MainViewController()
+        MainViewControllerKt.MainViewController(audioDataReceiver: player.getAudioDataReceiver())
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
@@ -88,6 +89,5 @@ struct ContentView: View {
                 .ignoresSafeArea(.keyboard) // Compose has own keyboard handler
     }
 }
-
 
 

@@ -4,6 +4,7 @@
 //
 
 import AVFoundation
+import ComposeApp
 
 protocol AudioEntryProviding {
     func provideAudioEntry(url: URL, headers: [String: String]) -> AudioEntry
@@ -14,6 +15,8 @@ final class AudioEntryProvider: AudioEntryProviding {
     private let networkingClient: NetworkingClient
     private let underlyingQueue: DispatchQueue
     private let outputAudioFormat: AVAudioFormat
+    
+    private let aaa: SrtAudioStreamSource
 
     init(networkingClient: NetworkingClient,
          underlyingQueue: DispatchQueue,
@@ -22,6 +25,11 @@ final class AudioEntryProvider: AudioEntryProviding {
         self.networkingClient = networkingClient
         self.underlyingQueue = underlyingQueue
         self.outputAudioFormat = outputAudioFormat
+        self.aaa = SrtAudioStreamSource(url: URL.init(string: "http://google.com")!, underlyingQueue: underlyingQueue)
+    }
+    
+    func getAudioReceiver() -> SharedAudioDataReceiver {
+        return aaa
     }
 
     func provideAudioEntry(url: URL, headers: [String: String]) -> AudioEntry {
@@ -47,17 +55,10 @@ final class AudioEntryProvider: AudioEntryProviding {
     }
     
     func provideSrtAudioSource(url: URL) -> CoreAudioStreamSource {
-        SrtAudioStreamSource(url: url, underlyingQueue: underlyingQueue)
+        aaa
     }
 
     func source(for url: URL, headers: [String: String]) -> CoreAudioStreamSource {
-        guard !url.isFileURL else {
-            return provideFileAudioSource(url: url)
-        }
-        
-        if url.scheme == "srt" {
-            return provideSrtAudioSource(url: url)
-        }
-        return provideAudioSource(url: url, headers: headers)
+        return provideSrtAudioSource(url: url)
     }
 }

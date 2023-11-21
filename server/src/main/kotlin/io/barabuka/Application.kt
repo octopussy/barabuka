@@ -59,6 +59,7 @@ fun Application.module() {
                     val fin = frame.fin
                     connections.forEach {
                         it.session.send(Frame.Binary(fin, receivedData))
+                        println("SEND TO ${it.name} ${receivedData.size}")
                     }
                 }
             } catch (e: Exception) {

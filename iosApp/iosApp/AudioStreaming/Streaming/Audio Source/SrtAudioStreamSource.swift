@@ -7,14 +7,15 @@
 
 import Foundation
 import AudioToolbox
+import ComposeApp
 
-class SrtAudioStreamSource: CoreAudioStreamSource {
+class SrtAudioStreamSource: CoreAudioStreamSource, SharedAudioDataReceiver {
     var forcedSourceAudioFormat: AudioStreamBasicDescription? = AudioStreamBasicDescription(
         mSampleRate: Float64(48000),
         mFormatID: kAudioFormatMPEG4AAC,
         mFormatFlags: 0,
         mBytesPerPacket: 0,
-        mFramesPerPacket: 1024,
+        mFramesPerPacket: 0,
         mBytesPerFrame: 0,
         mChannelsPerFrame: 1,
         mBitsPerChannel: 0,
@@ -54,6 +55,11 @@ class SrtAudioStreamSource: CoreAudioStreamSource {
 
     func storePacket(data: Data) {
         print("[SRT] store packet \(data.count)")
+        delegate?.dataAvailable(source: self, data: data)
+    }
+    
+    func onReceivePacket(data: Data) {
+        print("[!!!!!] store packet \(data.count)")
         delegate?.dataAvailable(source: self, data: data)
     }
 }

@@ -421,4 +421,7 @@ actual class AudioSession {
                 .toList()
         }
     }
+
+    actual fun setAudioDataReceiver(receiver: AudioDataReceiver) {
+    }
 }

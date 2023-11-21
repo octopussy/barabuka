@@ -29,7 +29,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
-const val HOST = "192.168.8.129"
+const val HOST = "192.168.1.13"
 //const val HOST = "192.168.0.105"
 const val PORT = 8080
 const val PATH = "/channel"
@@ -48,7 +48,7 @@ class AudioSessionTransportWS(
     private val path: String
 ) : AudioSessionTransport {
 
-    private val logger = LoggerObj("SESSION", true)
+    private val logger = LoggerObj("TRANSPORT", false)
 
     private var wsSession = MutableStateFlow<DefaultClientWebSocketSession?>(null)
     private var connectionJob: Job? = null
@@ -134,9 +134,10 @@ class AudioSessionTransportWS(
 
                 delay(5000)
             }
-        }
 
-        wsSession.value = null
+            logger.d { "Socket closed" }
+            wsSession.value = null
+        }
     }
 
     private fun CoroutineScope.handleSendChannel(session: DefaultClientWebSocketSession) {
