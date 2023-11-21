@@ -5,12 +5,12 @@ import androidx.compose.ui.window.application
 
 fun main() = application {
     Window(onCloseRequest = ::exitApplication) {
-        App()
+        BarabukaAppContent()
     }
 }
 
 @Preview
 @Composable
 fun AppDesktopPreview() {
-    App()
+    BarabukaAppContent()
 }
