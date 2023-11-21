@@ -129,9 +129,8 @@ open class AudioPlayer {
     private let serializationQueue: DispatchQueue
     private let sourceQueue: DispatchQueue
 
-    private let aaa: AudioEntryProvider
-    private let entryProvider: AudioEntryProviding
-
+    private let audioStreamSource: SrtAudioStreamSource
+    
     var entriesQueue: PlayerQueueEntries
 
     public init(configuration: AudioPlayerConfiguration = .default) {
@@ -145,11 +144,7 @@ open class AudioPlayer {
         serializationQueue = DispatchQueue(label: "streaming.core.queue", qos: .userInitiated)
         sourceQueue = DispatchQueue(label: "source.queue", qos: .default)
 
-        aaa = AudioEntryProvider(networkingClient: NetworkingClient(),
-                                           underlyingQueue: sourceQueue,
-                                           outputAudioFormat: outputAudioFormat)
-        
-        entryProvider = aaa
+        audioStreamSource = SrtAudioStreamSource(url: URL.init(string: "http://google.com")!, underlyingQueue: sourceQueue)
 
         fileStreamProcessor = AudioFileStreamProcessor(playerContext: playerContext,
                                                        rendererContext: rendererContext,
@@ -175,24 +170,20 @@ open class AudioPlayer {
     }
     
     public func getAudioDataReceiver() -> SharedAudioDataReceiver {
-        return aaa.getAudioReceiver()
+        return audioStreamSource
     }
-
-    // MARK: Public
-
-    /// Starts the audio playback for the given URL
-    ///
-    /// - parameter url: A `URL` specifying the audio context to be played
-    public func play(url: URL) {
-        play(url: url, headers: [:])
+    
+    func provideAudioEntry() -> AudioEntry {
+        return AudioEntry(source: audioStreamSource,
+                          entryId: AudioEntryId(id: "fakeId"),
+                          outputAudioFormat: outputAudioFormat)
     }
-
     /// Starts the audio playback for the given URL
     ///
     /// - parameter url: A `URL` specifying the audio context to be played.
     /// - parameter headers: A `Dictionary` specifying any additional headers to be pass to the network request.
-    public func play(url: URL, headers: [String: String]) {
-        let audioEntry = entryProvider.provideAudioEntry(url: url, headers: headers)
+    public func start() {
+        let audioEntry = provideAudioEntry()
         audioEntry.delegate = self
 
         checkRenderWaitingAndNotifyIfNeeded()
@@ -210,54 +201,6 @@ open class AudioPlayer {
         sourceQueue.async { [weak self] in
             guard let self = self else { return }
             self.processSource()
-        }
-    }
-
-    /// Queues the specified URL
-    ///
-    /// - Parameter url: A `URL` specifying the audio content to be played.
-    public func queue(url: URL) {
-        queue(url: url, headers: [:])
-    }
-
-    /// Queues the specified URLs
-    ///
-    /// - Parameter url: A `URL` specifying the audio content to be played.
-    public func queue(urls: [URL]) {
-        queue(urls: urls, headers: [:])
-    }
-
-    /// Queues the specified URL
-    ///
-    /// - Parameter url: A `URL` specifying the audio content to be played.
-    /// - parameter headers: A `Dictionary` specifying any additional headers to be pass to the network request.
-    public func queue(url: URL, headers: [String: String]) {
-        serializationQueue.sync {
-            let audioEntry = entryProvider.provideAudioEntry(url: url, headers: headers)
-            audioEntry.delegate = self
-            entriesQueue.enqueue(item: audioEntry, type: .upcoming)
-        }
-        checkRenderWaitingAndNotifyIfNeeded()
-        sourceQueue.async { [weak self] in
-            self?.processSource()
-        }
-    }
-
-    /// Queues the specified URLs
-    ///
-    /// - Parameter url: A array of `URL`s specifying the audio content to be played.
-    /// - parameter headers: A `Dictionary` specifying any additional headers to be pass to the network request.
-    public func queue(urls: [URL], headers: [String: String]) {
-        serializationQueue.sync {
-            for url in urls {
-                let audioEntry = entryProvider.provideAudioEntry(url: url, headers: headers)
-                audioEntry.delegate = self
-                entriesQueue.enqueue(item: audioEntry, type: .upcoming)
-            }
-        }
-        checkRenderWaitingAndNotifyIfNeeded()
-        sourceQueue.async { [weak self] in
-            self?.processSource()
         }
     }
 
