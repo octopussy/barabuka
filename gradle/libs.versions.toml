@@ -2,6 +2,7 @@
 kotlin = "1.9.20"
 agp = "8.1.4"
 coroutines = "1.7.3"
+nativeCoroutines = "1.0.0-ALPHA-21"
 
 compose = "1.5.4"
 compose-compiler = "1.5.4"
@@ -29,6 +30,9 @@ androidx-espresso-core = "3.5.1"
 junit = "4.13.2"
 
 [libraries]
+kotlinx-atomicfu = "org.jetbrains.kotlinx:atomicfu:0.22.0"
+kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.1"
+kotlinx-serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.1"
 kotlin-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlin-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 
@@ -76,6 +80,7 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 [plugins]
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
+nativeCoroutines = { id = "com.rickclephas.kmp.nativecoroutines", version.ref = "nativeCoroutines"}
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }

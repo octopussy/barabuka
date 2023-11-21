@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.nativeCoroutines)
 }
 
 kotlin {
@@ -30,7 +31,14 @@ kotlin {
             implementation(libs.ktor.logging)
 
             api(libs.kotlin.coroutines.core)
+            api(libs.kotlinx.datetime)
+            api(libs.kotlinx.atomicfu)
             api(libs.kotlininject.runtime)
+        }
+
+        androidMain.dependencies {
+            api(libs.okhttp.okhttp)
+            implementation(libs.ktor.client.okhttp)
         }
 
         jvmMain.dependencies {
@@ -42,6 +50,10 @@ kotlin {
             implementation(libs.ktor.client.darwin)
         }
     }
+}
+
+kotlin.sourceSets.all {
+    languageSettings.optIn("kotlin.experimental.ExperimentalObjCName")
 }
 
 android {

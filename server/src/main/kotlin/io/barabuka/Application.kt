@@ -33,6 +33,7 @@ class Connection(val session: DefaultWebSocketSession) {
 }
 
 fun Application.module() {
+    println("START!!!!")
     install(WebSockets) {
         pingPeriod = Duration.ofSeconds(15)
         timeout = Duration.ofSeconds(15)
@@ -46,6 +47,27 @@ fun Application.module() {
         }
 
         val connections = Collections.synchronizedSet<Connection?>(LinkedHashSet())
+
+        webSocket("/channel") {
+            println("Adding user!")
+            val thisConnection = Connection(this)
+            connections += thisConnection
+            try {
+                for (frame in incoming) {
+                    frame as? Frame.Binary ?: continue
+                    val receivedData = frame.data
+                    val fin = frame.fin
+                    connections.forEach {
+                        it.session.send(Frame.Binary(fin, receivedData))
+                    }
+                }
+            } catch (e: Exception) {
+                println(e.localizedMessage)
+            } finally {
+                println("Removing $thisConnection!")
+                connections -= thisConnection
+            }
+        }
 
         webSocket("/chat") {
             println("Adding user!")
