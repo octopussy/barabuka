@@ -133,9 +133,8 @@ open class AudioPlayer {
     
     var entriesQueue: PlayerQueueEntries
 
-    public init(configuration: AudioPlayerConfiguration = .default) {
+    public init(engine: AVAudioEngine, configuration: AudioPlayerConfiguration = .default) {
         self.configuration = configuration.normalizeValues()
-        let engine = AVAudioEngine()
         self.audioEngine = engine
         rendererContext = AudioRendererContext(configuration: configuration, outputAudioFormat: outputAudioFormat)
         playerContext = AudioPlayerContext()

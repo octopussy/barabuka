@@ -26,12 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
-import io.barabuka.AudioSessionTransportWS
 import io.barabuka.audio.AudioSession
-import io.barabuka.audio.AudioSessionTransport
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 
 @Composable
 fun BarabukaAppContent(audioSession: AudioSession) {

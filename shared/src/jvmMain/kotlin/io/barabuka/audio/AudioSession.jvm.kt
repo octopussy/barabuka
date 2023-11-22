@@ -2,7 +2,7 @@ package io.barabuka.audio
 
 import kotlinx.coroutines.flow.StateFlow
 
-actual class AudioSession {
+internal actual class AudioSessionPlatform actual constructor(receiver: AudioDataReceiver?, sender: AudioDataSender?) {
     actual fun init() {
     }
 
@@ -17,8 +17,4 @@ actual class AudioSession {
 
     actual val isConnected: StateFlow<Boolean>
         get() = TODO("Not yet implemented")
-
-    actual fun setAudioDataReceiver(receiver: AudioDataReceiver) {
-    }
-
 }

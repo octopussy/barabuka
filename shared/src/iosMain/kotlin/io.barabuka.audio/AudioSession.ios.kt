@@ -1,6 +1,5 @@
 package io.barabuka.audio
 
-import com.rickclephas.kmp.nativecoroutines.NativeCoroutines
 import io.barabuka.createAudioSessionTransport
 import io.barabuka.util.LoggerObj
 import kotlinx.coroutines.CoroutineScope
@@ -10,15 +9,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import toPlatformBytes
 
-
-actual class AudioSession {
+internal actual class AudioSessionPlatform actual constructor(
+    private val receiver: AudioDataReceiver?,
+    private val sender: AudioDataSender?
+) {
     private val scope = CoroutineScope(Dispatchers.Default)
 
     private val transport = createAudioSessionTransport()
 
-    private var audioDataReceiver: AudioDataReceiver? =null
-
-    @NativeCoroutines
     actual val isConnected: StateFlow<Boolean>
         get() = MutableStateFlow(false)
 
@@ -32,7 +30,7 @@ actual class AudioSession {
         scope.launch {
             for (data in transport.receiveChannel) {
                 logger.d { "RECEIVED ${data.first.size}" }
-                audioDataReceiver?.onReceivePacket(data.first.toPlatformBytes())
+                receiver?.onReceivePacket(data.first.toPlatformBytes())
             }
         }
     }
@@ -47,9 +45,5 @@ actual class AudioSession {
 
     actual fun stopSpeech() {
         logger.d { "STOP SPEECH" }
-    }
-
-    actual fun setAudioDataReceiver(receiver: AudioDataReceiver) {
-        audioDataReceiver = receiver
     }
 }

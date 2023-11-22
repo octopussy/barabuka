@@ -1,14 +1,25 @@
 package io.barabuka.audio
 
-import kotlinx.coroutines.flow.StateFlow
+class AudioSession(
+    receiver: AudioDataReceiver? = null,
+    sender: AudioDataSender? = null
+) {
 
-expect class AudioSession {
-    val isConnected: StateFlow<Boolean>
+    private val delegate = AudioSessionPlatform(receiver, sender)
 
-    fun setAudioDataReceiver(receiver: AudioDataReceiver)
+    val isConnected = delegate.isConnected
 
-    fun init()
-    fun release()
-    fun startSpeech()
-    fun stopSpeech()
+    fun init() {
+        delegate.init()
+    }
+
+    fun startSpeech() {
+        delegate.startSpeech()
+    }
+
+    fun stopSpeech() {
+        delegate.stopSpeech()
+    }
+
+
 }

@@ -1,14 +1,8 @@
 package io.barabuka.audio
 
 import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.media.*
 import android.media.MediaCodec.BufferInfo
-import android.os.Handler
-import android.os.Looper
 import co.touchlab.kermit.Logger
 import io.barabuka.createAudioSessionTransport
 import kotlinx.coroutines.CancellationException
@@ -22,13 +16,8 @@ import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.datetime.Clock
 import java.io.ByteArrayInputStream
-import java.io.File
 import java.nio.ByteBuffer
-import kotlin.coroutines.resume
-
 
 private const val BASE_SAMPLE_RATE = 48000
 
@@ -77,7 +66,10 @@ object AACProfiles {
 
 private const val MAX_ATTEMPTS_TO_CONNECT = 3
 
-actual class AudioSession {
+internal actual class AudioSessionPlatform actual constructor(
+    receiver: AudioDataReceiver?,
+    sender: AudioDataSender?
+) {
     private val scope = CoroutineScope(Dispatchers.Default)
 
     private var audioRecord: AudioRecord? = null
@@ -94,9 +86,9 @@ actual class AudioSession {
 
     private val recordBuffer = ByteArray(RECORD_BUFFER_SIZE)
 
-    private val delegate = createAudioSessionTransport()
+    private val transport = createAudioSessionTransport()
 
-    actual val isConnected: StateFlow<Boolean> = delegate.isConnected
+    actual val isConnected: StateFlow<Boolean> = transport.isConnected
 
     private val rawRecordedChunks =
         Channel<ByteArray>(UNLIMITED, onBufferOverflow = BufferOverflow.DROP_OLDEST)
@@ -107,12 +99,12 @@ actual class AudioSession {
         createAudioRecordIfNeeded()
         createCodecs()
 
-        delegate.init()
+        transport.init()
     }
 
     actual fun release() {
         Logger.d { "AAAAA AudioSession release $this" }
-        delegate.release()
+        transport.release()
         scope.cancel()
         releaseAudioPlayer()
         releaseAudioRecord()
@@ -126,7 +118,7 @@ actual class AudioSession {
         if (isSpeechStarted) return
 
         isSpeechStarted = true
-        delegate.onSpeechStarted()
+        transport.onSpeechStarted()
         createAudioRecordIfNeeded()
         audioRecord?.startRecording()
         Logger.d("[ speech start => recordingState = ${audioRecord?.recordingState} ]")
@@ -139,7 +131,7 @@ actual class AudioSession {
 
         audioRecordJob?.cancel()
         audioRecordJob = null
-        delegate.onSpeechFinished()
+        transport.onSpeechFinished()
         audioRecord?.stop()
         Logger.d("[ speech stop => recordingState = ${audioRecord?.recordingState} ]")
         isRecording = false
@@ -262,7 +254,7 @@ actual class AudioSession {
                 val ba = ByteArray(info.size)
                 buffer.get(ba)
 
-                delegate.writeToSink(ba, 0, info.size) // -> SRT
+                transport.writeToSink(ba, 0, info.size) // -> SRT
                 writeDataToFile(ba, info) // -> file
                 codec.releaseOutputBuffer(index, false)
             }
@@ -307,7 +299,7 @@ actual class AudioSession {
             override fun onInputBufferAvailable(codec: MediaCodec, index: Int) {
                 scope.launch {
                     val buffer = codec.getInputBuffer(index) ?: return@launch
-                    val (data, pts) = delegate.receiveChannel.receive()
+                    val (data, pts) = transport.receiveChannel.receive()
                     //Logger.d { "AAAAAAAA BUFFER --> $index $codec data.size=${data.size} pts=$pts" }
                     buffer.clear()
                     buffer.put(data, 0, data.size)
@@ -420,8 +412,5 @@ actual class AudioSession {
                 .map { it.name }
                 .toList()
         }
-    }
-
-    actual fun setAudioDataReceiver(receiver: AudioDataReceiver) {
     }
 }

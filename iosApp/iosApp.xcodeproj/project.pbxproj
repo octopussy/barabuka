@@ -12,6 +12,7 @@
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
 		3216A4122B0CE058009985C6 /* KMPNativeCoroutinesCombine in Frameworks */ = {isa = PBXBuildFile; productRef = 3216A4112B0CE058009985C6 /* KMPNativeCoroutinesCombine */; };
 		3216A4142B0CE058009985C6 /* KMPNativeCoroutinesCore in Frameworks */ = {isa = PBXBuildFile; productRef = 3216A4132B0CE058009985C6 /* KMPNativeCoroutinesCore */; };
+		32ACBBF22B0E083B0098A7FE /* AudioStreamRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32ACBBF12B0E083B0098A7FE /* AudioStreamRecorder.swift */; };
 		32CFEF4C2B0D1833007E5735 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32CFEF112B0D1833007E5735 /* Queue.swift */; };
 		32CFEF4D2B0D1833007E5735 /* BiMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32CFEF122B0D1833007E5735 /* BiMap.swift */; };
 		32CFEF4E2B0D1833007E5735 /* NetStatusService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32CFEF142B0D1833007E5735 /* NetStatusService.swift */; };
@@ -67,6 +68,7 @@
 		058557BA273AAA24004C7B11 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2152FB032600AC8F00CF470E /* iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp.swift; sourceTree = "<group>"; };
+		32ACBBF12B0E083B0098A7FE /* AudioStreamRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioStreamRecorder.swift; sourceTree = "<group>"; };
 		32CFEF112B0D1833007E5735 /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
 		32CFEF122B0D1833007E5735 /* BiMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BiMap.swift; sourceTree = "<group>"; };
 		32CFEF142B0D1833007E5735 /* NetStatusService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetStatusService.swift; sourceTree = "<group>"; };
@@ -147,6 +149,7 @@
 			children = (
 				32CFEF0F2B0D1833007E5735 /* Core */,
 				32CFEF272B0D1833007E5735 /* Streaming */,
+				32ACBBF12B0E083B0098A7FE /* AudioStreamRecorder.swift */,
 			);
 			path = AudioStreaming;
 			sourceTree = "<group>";
@@ -472,6 +475,7 @@
 				32CFEF6A2B0D1833007E5735 /* AudioFileStreamProcessor.swift in Sources */,
 				32CFEF4E2B0D1833007E5735 /* NetStatusService.swift in Sources */,
 				32CFEF5C2B0D1833007E5735 /* measure.swift in Sources */,
+				32ACBBF22B0E083B0098A7FE /* AudioStreamRecorder.swift in Sources */,
 				32CFEF792B0D1833007E5735 /* AudioStreamState.swift in Sources */,
 				32CFEF642B0D1833007E5735 /* RemoteAudioSource.swift in Sources */,
 				32CFEF762B0D1833007E5735 /* EntryFrames.swift in Sources */,
